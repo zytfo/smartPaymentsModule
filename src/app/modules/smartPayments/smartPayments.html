@@ -1,0 +1,32 @@
+<div class="col-md-6" style="margin-top:10px">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background-color: rgb(68, 68, 68); color: #000000;border-radius: 0px;">
+            <i class="fa fa-chevron-right"></i> Send a simple transfer
+        </div>
+        <div class="panel-body">
+            <label>Password</label>
+            <br>
+            <input type="password" class="form-control" ng-model="$ctrl.common.password" />
+            <br>
+            <label>Recipient</label>
+            <br>
+            <input type="text" class="form-control" ng-model="$ctrl.formData.recipient" />
+            <br>
+            <label>Amount</label>
+            <br>
+            <input type="number" class="form-control" ng-model="$ctrl.formData.amount" min="0" ng-change="$ctrl.updateFee();" />
+            <br>
+            <label>Message</label>
+            <br>
+            <textarea class="form-control" ng-model="$ctrl.formData.message" rows="4" ng-change="$ctrl.updateFee();"></textarea>
+            <br>
+            <input type="date" class="form-control" ng-model="" />
+            <br>
+            <label>Fee</label>
+            <br>
+            <span>{{ $ctrl.formData.fee / 1000000 }}</span>
+            <br>
+            <button ng-click="$ctrl.send()" ng-disabled="$ctrl.okPressed">Send</button>
+        </div>
+    </div>
+</div>

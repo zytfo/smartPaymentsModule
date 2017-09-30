@@ -1,0 +1,231 @@
+<div class="services-page">
+    <div class="container-fluid main">
+
+        <div class="row">
+            <div class="col-sm-9">
+                <h2>{{ 'PORTAL_TITLE' | translate }}</h2>
+            </div>
+            <div class="col-sm-3 secondary">
+                <h4> {{ 'DASHBOARD_MARKET_INFO_TITLE' | translate }}</h4>
+            </div>
+        </div>
+
+        <div class="row portalWrap">
+            <div class="col-sm-12 col-lg-9">
+
+                <div class="row row1">
+
+                    <div class="col-sm-4">
+                        <div class="panel-heading row">
+                            <div class="col-sm-3">
+                                <i class="fa fa-user-plus fa-4x"></i>
+                            </div>
+                            <div class="col-sm-9">
+                                <h5>{{ 'PORTAL_MULTISIG_TITLE' | translate }}</h5>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <p>{{ 'PORTAL_MULTISIG_TEXT' | translate }}</p>
+                        </div>
+                        <div class="panelFooter">
+                            <button class="btn" ui-sref="app.createMultisig">{{ 'PORTAL_MULTISIG_BTN_1' | translate }}</button>
+                            <br>
+                            <button class="btn" ng-disabled="!$ctrl._DataBridge.accountData.meta.cosignatoryOf.length" ui-sref="app.editMultisig">{{ 'PORTAL_MULTISIG_BTN_2' | translate }}</button>
+                            <br>
+                            <button class="btn" ui-sref="app.signMultisig">{{ 'PORTAL_MULTISIG_BTN_3' | translate }}</button>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="panel-heading row">
+                            <div class="col-sm-3">
+                                <i class="fa fa-sitemap fa-4x"></i>
+                            </div>
+                            <div class="col-sm-9">
+                                <h5>{{ 'PORTAL_NS_TITLE' | translate }}</h5>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <p>{{ 'PORTAL_NS_TEXT' | translate }}</p>
+                        </div>
+                        <div class="panelFooter">
+                            <button class="btn" class="" ui-sref="app.namespaces">{{ 'PORTAL_NS_BTN' | translate }}</button>
+                            <br>
+                            <button class="btn" ui-sref="app.renewNamespaces">{{ 'RENEW_NS_TITLE' | translate }}</button>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="">
+                            <div class="panel-heading row">
+                                <div class="col-sm-3">
+                                    <i class="fa fa-chain fa-4x"></i>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h5>{{ 'PORTAL_HARVESTING_TITLE' | translate }}</h5>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <p>{{ 'PORTAL_HARVESTING_TEXT' | translate }}</p>
+                            </div>
+                            <div class="panelFooter">
+                                <button class="btn" ui-sref="app.importanceTransfer">{{ 'IMPORTANCE_TRANSFER_TITLE' | translate }}</button>
+                                <br>
+                                <button class="btn" ui-sref="app.multisigImportanceTransfer" ng-disabled="!$ctrl._DataBridge.accountData.meta.cosignatoryOf.length">{{ 'IMPORTANCE_TRANSFER_MULTISIGNATURE_TITLE' | translate }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECOND ROW STARTS -->
+                <div class="row row2">
+                    <div class="col-sm-4">
+                        <div class="panel-heading row">
+                            <div class="col-sm-3">
+                                <img src="images/apostille.png" />
+                            </div>
+                            <div class="col-sm-9">
+                                <h5>{{ 'PORTAL_APOSTILLE_TITLE' | translate }}</h5>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <p>{{ 'PORTAL_APOSTILLE_TEXT' | translate }}</p>
+                        </div>
+                        <div class="panelFooter">
+                            <button class="btn" ui-sref="app.createApostille">{{ 'PORTAL_APOSTILLE_BTN_1' | translate }}</button>
+                            <br>
+                            <button class="btn" ui-sref="app.auditApostille">{{ 'PORTAL_APOSTILLE_BTN_2' | translate }}</button>
+                            <br>
+                            <button class="btn" ui-sref="app.apostilleHistory">{{ 'GENERAL_HISTORY' | translate }}</button>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel-heading row">
+                            <div class="col-sm-3">
+                                <i class="fa fa-th fa-4x"></i>
+                            </div>
+                            <div class="col-sm-9">
+                                <h5>{{ 'PORTAL_MOSAIC_TITLE' | translate }}</h5>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <p>{{ 'PORTAL_MOSAIC_TEXT' | translate }}</p>
+                        </div>
+                        <div class="panelFooter">
+                            <button class="btn" ng-disabled="($ctrl._DataBridge.accountData.account === undefined || $ctrl._DataBridge.namespaceOwned[$ctrl._Wallet.currentAccount.address] === undefined && !$ctrl._DataBridge.accountData.meta.cosignatoryOf.length)" ui-sref="app.createMosaic">{{ 'PORTAL_MOSAIC_BTN_1' | translate }}</button>
+                            <br>
+                            <button class="btn" ng-disabled="($ctrl._DataBridge.accountData.account === undefined || $ctrl._DataBridge.mosaicOwnedSize[$ctrl._Wallet.currentAccount.address] < 2 && !$ctrl._DataBridge.accountData.meta.cosignatoryOf.length)" ui-sref="app.editMosaic">{{ 'PORTAL_MOSAIC_BTN_2' | translate }}</button>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel-heading row">
+                            <div class="col-sm-3">
+                                <img src="images/changellyRocket.png" />
+                            </div>
+                            <div class="col-sm-9">
+                                <h5> {{ 'PORTAL_CHANGELLY_TITLE' | translate }}</h5>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <p>{{ 'PORTAL_CHANGELLY_TEXT' | translate }}</p>
+                        </div>
+                        <div class="panelFooter">
+                            <button class="btn" ui-sref="app.changelly">{{ 'PORTAL_CHANGELLY_BTN' | translate }}</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- THIRD ROW STARTS -->
+                <div class="row row3">
+                    <div class="col-sm-4">
+                        <div class="panel-heading row">
+                            <div class="col-sm-3">
+                                <i class="fa fa-4x">&#xf2bb; </i>
+                            </div>
+                            <div class="col-sm-9">
+                                <h5>{{ 'ADDRESS_BOOK_TITLE' | translate }}</h5>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <p>{{ 'PORTAL_ADDRESS_BOOK_TEXT' | translate }}</p>
+                        </div>
+                        <div class="panelFooter">
+                            <button class="btn" ui-sref="app.addressBook">{{ 'PORTAL_ADDRESS_BOOK_BTN' | translate }}</button>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel-heading row">
+                            <div class="col-sm-3">
+                                <i class="fa fa-4x fa-pie-chart" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-sm-9">
+                                <h5>{{ 'PORTAL_VOTING_TITLE' | translate }}</h5>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <p>{{ 'PORTAL_VOTING_TEXT' | translate }}</p>
+                        </div>
+                        <div class="panelFooter">
+                            <button class="btn" ui-sref="app.votingPolls">{{ 'PORTAL_VOTING_BTN1' | translate }}</button> <br />
+                            <button class="btn" ui-sref="app.votingCreatePoll">{{ 'PORTAL_VOTING_BTN2' | translate }}</button>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel-heading row">
+                            <div class="col-sm-3">
+                                <!-- <i class="fa fa-4x">&#xf2bb; </i> -->
+                                <img src="images/smartpayments.png" />
+                            </div>
+                            <div class="col-sm-9">
+                                <h5>Smart Payments</h5>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <p>Create scheduled payments.</p>
+                        </div>
+                        <div class="panelFooter">
+                            <button class="btn" ui-sref="app.smartPayments">Smart Payments</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-12 col-lg-3">
+                <br>
+                <!-- MARKET INFO WIDGET -->
+                <div class="market-info" ng-show="$ctrl._DataBridge.marketInfo.highestBid && $ctrl._DataBridge.btcPrice.last">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-3 header">
+                            {{ 'DASHBOARD_MARKET_INFO_CAP' | translate }}:
+                            <br>
+                            <span><i class="fa fa-usd"></i> {{($ctrl._DataBridge.marketInfo.highestBid * 8999999999) * $ctrl._DataBridge.btcPrice.last | currencyFormat}}</span>
+                        </div>
+                        <div class="col-md-6 col-sm-3 header">
+                            {{ 'DASHBOARD_MARKET_INFO_VOLUME' | translate }}:
+                            <br>
+                            <span><i class="fa fa-usd"></i> {{$ctrl._DataBridge.marketInfo.baseVolume * $ctrl._DataBridge.btcPrice.last | currencyFormat}}</span>
+                        </div>
+                        <div class="col-md-6 col-sm-3 header ticker">
+                            {{ 'DASHBOARD_MARKET_INFO_PRICE' | translate }} in USD:
+                            <br>
+                            <span><i class="fa fa-usd"></i> {{$ctrl.toFixed4($ctrl._DataBridge.marketInfo.highestBid * $ctrl._DataBridge.btcPrice.last)}}</span>
+                        </div>
+                        <div class="col-md-6 col-sm-3 ticker header">
+                            {{ 'DASHBOARD_MARKET_INFO_PRICE' | translate }} in Bitcoin:
+                            <br>
+                            <span><i class="fa fa-bitcoin"></i> {{$ctrl._DataBridge.marketInfo.highestBid}}</span>
+                        </div>
+                        <div class="col-md-6 col-sm-3 ticker header">
+                            {{ 'DASHBOARD_MARKET_INFO_CHANGES' | translate }}:
+                            <br>
+                            <span ng-style="$ctrl._DataBridge.marketInfo.percentChange * 100 < 0 ? { 'color': 'red'} : { 'color': 'green'}">
+              <span class="fa fa-caret-up" ng-show="$ctrl._DataBridge.marketInfo.percentChange * 100 > 0" style="color:green;"></span>
+                            <span class="fa fa-caret-down" ng-show="$ctrl._DataBridge.marketInfo.percentChange * 100 < 0" style="color:red;"></span> {{$ctrl._DataBridge.marketInfo.percentChange * 100 | currencyFormat}} %
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
