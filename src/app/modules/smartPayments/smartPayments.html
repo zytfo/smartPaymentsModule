@@ -22,84 +22,96 @@
                         </ul>
                     </div>
                     <div class="panel-body">
-                        <!-- OPTIONS TAB -->
                         <div ng-show="$ctrl.isTabSet(1)">
-                            <!-- Index / Poll Address Input -->
                             <form>
-                                <!--<label>Password</label>
+                                <!-- Recipient -->
+                                <fieldset class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                                <label>Recipient: </label>
+                                        </span>
+                                        <input class="form-control form-control-lg" type="text" ng-model="$ctrl.formData.recipient" ng-model-options="{debounce:500}" />
+                                    </div>
+                                </fieldset>
+                                <!-- Amount of XEM to send -->
+                                <fieldset class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <label>Amount: </label>
+                                          </span>
+                                        <div class="form-control formFloat">
+                                            <input type="text" ng-model="$ctrl.formData.amount" ng-change="$ctrl.updateFees();" />
+                                            <label class="floatRight"><small>XEM</small></label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <!-- Message Field -->
+                                <fieldset class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-btn message">
+                                            <label>Message: </label>
+                                        </span>
+                                        <textarea class="form-control" ng-model="$ctrl.formData.message" rows="4" ng-change="$ctrl.updateFee();" ng-class="$ctrl.charsLeft < 0 ? 'has-error' : ''"></textarea>
+                                    </div>
+                                    <p style="float:right;margin-top:5px;"><b>Characters left</b>: {{ $ctrl.charsLeft }}</p>
+                                </fieldset>
+                                <!-- Date Field -->
+                                <fieldset class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-btn message">
+                                                <label>Date: </label>
+                                            </span>
+                                        <input type="datetime-local" ng-model="$ctrl.date" ng-change="$ctrl.saveDate();"></textarea>
+                                    </div>
+                                </fieldset>
+                                <!-- Transaction fee calculation section -->
+                                <fieldset class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <label>Fee: </label>
+                                        </span>
+                                        <div class="form-control formFloat" readOnly>
+                                            <span class="feeAmount">
+                                            <!-- Transaction fee -->
+                                            <span>{{($ctrl.formData.fee | fmtNemValue)[0]}}.{{($ctrl.formData.fee | fmtNemValue)[1]}}</span>
+                                            </span>
+                                            <label class="floatRight"><small>XEM</small></label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <!-- Password Field -->
+                                <fieldset class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <label ng-class="!$ctrl.common.password.length ? 'has-error' : ''">Password: </label>
+                                        </span>
+                                        <input class="form-control password" type="password" ng-model="$ctrl.common.password" ng-class="!$ctrl.common.password.length ? 'has-error' : ''" />
+                                    </div>
+                                </fieldset>
                                 <br>
-                                <input type="password" class="form-control" ng-model="$ctrl.common.password" />
+                                <button class="btn btn-success" ng-click="$ctrl.saveTransaction();" ng-disabled="$ctrl.okPressed">Create Scheduled Payment</button>
                                 <br>
-                                <label>Recipient</label>
+                                <button class="btn btn-success" ng-click="$ctrl.addTransaction();">Create Another Scheduled Payment</button>
                                 <br>
-                                <input type="text" class="form-control" ng-model="$ctrl.formData.recipient" />
-                                <br>
-                                <label>Amount</label>
-                                <br>
-                                <input type="number" class="form-control" ng-model="$ctrl.formData.amount" min="0" ng-change="$ctrl.updateFee();" />
-                                <br>
-                                <label>Message</label>
-                                <br>
-                                <textarea class="form-control" ng-model="$ctrl.formData.message" rows="4" ng-change="$ctrl.updateFee();"></textarea>-->
-                                <br>
-                                <input type="datetime-local" class="form-control" ng-model="$ctrl.date" ng-change="$ctrl.saveDate();" />
-                                <br>
-                                <span>{{ $ctrl.date }}</span>
-                                <br>
-                                <button ng-click="$ctrl.saveTransaction();" ng-disabled="$ctrl.okPressed">Create Scheduled Payment</button>
-                                <br>
-                                <button ng-click="$ctrl.addTransaction();">Create Another Scheduled Payment</button>
-                                <!--<br>
-                                <label>Fee</label>
-                                <br>
-                                <span>{{ $ctrl.formData.fee / 1000000 }}</span>
-                                <br>
-                                <button ng-click="$ctrl.saveTrainsaction();" ng-disabled="$ctrl.okPressed">Create Scheduled Payment</button>-->
                             </form>
                             <br>
-                            <!-- only votable -->
-                            <!--<input id="box1" type="checkbox" ng-model="$ctrl.onlyVotable" ng-click="$ctrl.updateList()"><label for="box1">Show only polls you can vote on</label>-->
-                            <!-- INDEX CREATION -->
-                            <!--<br>
-                            <br>
-                            <button class="btn btn-success pull-xs-left" style="width:25%" ng-click="$ctrl.createIndex = true;">Create a poll Index</button>
-                            <br>
-                            <br>-->
-                            <!-- Created indexes -->
-                            <!--<div ng-hide="$ctrl.createdIndexes.length === 0">
-                                <label>created Indexes:</label>
-                                <div ng-repeat="indexAddress in $ctrl.createdIndexes track by $index">
-                                    <a ng-click="$ctrl.inputAccount = indexAddress; $ctrl.pollIndexInput()">{{indexAddress}}</a>
-                                </div>
-                            </div>-->
                         </div>
                         <div ng-show="$ctrl.isTabSet(2)">
-                            <!-- Index / Poll Address Input -->
                             <form>
-                                <label>Your dates</label>
+                                <label>Your Transactions</label>
                                 <br>
-                                <li ng-repeat="date in $ctrl.dates">
-                                    {{date}}.
-                                    <br>
+                                <li ng-repeat="transaction in $ctrl.transactions">
+                                    Transaction #{{$index + 1}}.
+                                    <br> Recipient: {{transaction.formData.recipient}}.
+                                    <br> Amount: {{transaction.formData.amount}}.
+                                    <br> Message: {{transaction.formData.message}}
+                                    <br> Fee: {{transaction.formData.fee / 1000000}}
+                                    <br> Date: {{transaction.date}}
+                                    <br> <br>
                                 </li>
                                 <br>
                             </form>
                             <br>
-                            <!-- only votable -->
-                            <!--<input id="box1" type="checkbox" ng-model="$ctrl.onlyVotable" ng-click="$ctrl.updateList()"><label for="box1">Show only polls you can vote on</label>-->
-                            <!-- INDEX CREATION -->
-                            <!--<br>
-                                <br>
-                                <button class="btn btn-success pull-xs-left" style="width:25%" ng-click="$ctrl.createIndex = true;">Create a poll Index</button>
-                                <br>
-                                <br>-->
-                            <!-- Created indexes -->
-                            <!--<div ng-hide="$ctrl.createdIndexes.length === 0">
-                                    <label>created Indexes:</label>
-                                    <div ng-repeat="indexAddress in $ctrl.createdIndexes track by $index">
-                                        <a ng-click="$ctrl.inputAccount = indexAddress; $ctrl.pollIndexInput()">{{indexAddress}}</a>
-                                    </div>
-                                </div>-->
                         </div>
                         <br>
                     </div>

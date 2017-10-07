@@ -29,6 +29,8 @@ class SmartPaymentsCtrl {
             this.dates = [];
             this.date = '';
             this.tab = 1;
+            this.transactions = [];
+            this.charsLeft = 1024;
             //new_date = "2017-06-01T08:30";
             //var time = new Time();
 
@@ -140,11 +142,32 @@ class SmartPaymentsCtrl {
 
     saveTransaction() {
         this.okPressed = true;
-        this.dates.push(this.date);
+        // Decrypt/generate private key and check it. Returned private key is contained into this.common
+        if (!CryptoHelpers.passwordToPrivatekeyClear(this.common, this._Wallet.currentAccount, this._Wallet.algo, true)) {
+            this._Alert.invalidPassword();
+            // Enable send button
+            this.okPressed = false;
+            return;
+        } else if (!CryptoHelpers.checkAddress(this.common.privateKey, this._Wallet.network, this._Wallet.currentAccount.address)) {
+            this._Alert.invalidPassword();
+            // Enable send button
+            this.okPressed = false;
+            return;
+        }
+        var transaction = { formData: this.formData, date: this.date };
+        //this.dates.push(this.date);
+        this.transactions.push(transaction);
     }
 
     addTransaction() {
         this.okPressed = false;
+        this.formData = {}
+        this.formData.recipient = '';
+        this.formData.amount = 0;
+        this.formData.message = '';
+        this.formData.encryptMessage = false;
+        this.formData.fee = 0;
+        this.date = '';
     }
 
     /**
