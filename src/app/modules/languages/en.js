@@ -132,7 +132,7 @@ function EnglishProvider($translateProvider) {
         GENERAL_HISTORY: 'History',
         GENERAL_REVEAL: 'Reveal',
         GENERAL_QR: 'QR code',
-        GENERAL_UPDATE:  'Update',
+        GENERAL_UPDATE: 'Update',
         GENERAL_UNKNOWN: 'Unknown',
         GENERAL_IMPORTANCE: 'Importance',
         GENERAL_TRANSACTIONS: 'Transactions',
@@ -704,7 +704,11 @@ function EnglishProvider($translateProvider) {
         FORM_TITLE_FIELD_PLACEHOLDER: 'Title',
         FORM_DESCRIPTION_FIELD_PLACEHOLDER: 'Write your description here',
         FORM_OPTION_FIELD_PLACEHOLDER: 'write option',
-        FORM_WHITELIST_FIELD_PLACEHOLDER: 'account address'
+        FORM_WHITELIST_FIELD_PLACEHOLDER: 'account address',
+
+        // SMART PAYMENTS MODULE
+        SMART_PAYMENTS_TITLE: 'Create scheduled payments',
+        SMART_PAYMENTS_TRANSACTION: 'New transaction'
     });
 
 }

@@ -45,10 +45,9 @@ class pollsCtrl {
 
         // Default poll Index
         // testnet is -104 and mainnet is 104
-        if(this._Wallet.network < 0){
+        if (this._Wallet.network < 0) {
             this.pollIndexAccount = "TAVGTNCVGALLUPZC4JTLKR2WX25RQM2QOK5BHBKC";
-        }
-        else{
+        } else {
             this.pollIndexAccount = "NAZN26HYB7C5HVYVJ4SL3KBTDT773NZBAOMGRFZB";
         }
         this.pollIndexPrivate = false;
@@ -66,23 +65,23 @@ class pollsCtrl {
         this.classes = ["label label-success poi-tag", "label label-primary whitelist-tag"];
 
         // Poll list
-        this.allPolls = [];  // Has all the poll headers on the poll Index (unfiltered)
-        this.pollsList = [];  // Filtered poll headers
-        this.selectedPoll = null;  // Details object for the selected poll
-        this.currentPollAddress = '';  // The poll Address of the currently selected poll
+        this.allPolls = []; // Has all the poll headers on the poll Index (unfiltered)
+        this.pollsList = []; // Filtered poll headers
+        this.selectedPoll = null; // Details object for the selected poll
+        this.currentPollAddress = ''; // The poll Address of the currently selected poll
 
         // Selected options
-        this.selectedOption = "";  // for single choice
-        this.selectedOptions = [];  // for multiple choice
+        this.selectedOption = ""; // for single choice
+        this.selectedOptions = []; // for multiple choice
 
         // Variables for knowing which data to show
         this.showDetails = false;
-        this.showVote = false;  //wether to show voting options or results
+        this.showVote = false; //wether to show voting options or results
         this.multisigVote = false;
         this.createIndex = false;
 
-        this.tab = 1;  //selected tab
-        this.onlyVotable = true;  //if true only votable polls appear in index
+        this.tab = 1; //selected tab
+        this.onlyVotable = true; //if true only votable polls appear in index
 
         // Issues for not being able to vote
         this.issues = [];
@@ -95,9 +94,9 @@ class pollsCtrl {
 
         // Info for multisig voting
         // checks if the user is cosignatory of an account, if false the multisig vote tab will not be shown
-        this.isCosignatory = this._DataBridge.accountData.meta.cosignatoryOf.length == 0
-            ? ''
-            : this._DataBridge.accountData.meta.cosignatoryOf[0];
+        this.isCosignatory = this._DataBridge.accountData.meta.cosignatoryOf.length == 0 ?
+            '' :
+            this._DataBridge.accountData.meta.cosignatoryOf[0];
         this.multisigAccount = '';
 
         // The address that is inputted on the options tab
@@ -108,7 +107,7 @@ class pollsCtrl {
 
         // List of poll indexes created by the user
         this.createdIndexes = [];
-        this.getCreatedIndexes().then((indexes)=>{
+        this.getCreatedIndexes().then((indexes) => {
             this.createdIndexes = indexes;
         });
 
@@ -144,15 +143,14 @@ class pollsCtrl {
         var optionStrings = [];
         let allAddresses = this.selectedPoll.options.addresses; //will be null for old format polls
         let allStrings = this.selectedPoll.options.strings;
-        if(this.selectedPoll.options.link){ // not true if it is an old format poll
+        if (this.selectedPoll.options.link) { // not true if it is an old format poll
             var link = this.selectedPoll.options.link;
         }
         if (this.selectedPoll.formData.multiple) {
             optionAddresses = this.selectedOptions.map((i) => {
-                if(link){
+                if (link) {
                     return link[allStrings[i]];
-                }
-                else{ //For compatibility with old polls
+                } else { //For compatibility with old polls
                     return allAddresses[i];
                 }
             });
@@ -160,10 +158,9 @@ class pollsCtrl {
                 return allStrings[i];
             });
         } else {
-            if(link){
+            if (link) {
                 optionAddresses = [link[allStrings[this.selectedOption]]];
-            }
-            else{
+            } else {
                 optionAddresses = [allAddresses[this.selectedOption]];
             }
             optionStrings = [allStrings[this.selectedOption]];
@@ -193,30 +190,30 @@ class pollsCtrl {
             this._Alert.votingSuccess();
             this.common.password = '';
             this._scope.$digest();
-        }, (e)=>{
+        }, (e) => {
             this.voting = false;
             throw e;
-        }).catch((e)=>{
+        }).catch((e) => {
             this.common.password = '';
             this.voting = false;
         });
     }
 
     // Returns all addresses of the poll Indexes created by the user
-    getCreatedIndexes(){
+    getCreatedIndexes() {
         let options = {
             fromAddress: this._Wallet.currentAccount.address,
             start: 0
         }
-        return this._nemUtils.getTransactionsWithString(this._Wallet.currentAccount.address, "createdPollIndex:", options).then((creationTrans)=>{
-            return creationTrans.map((trans)=>{
+        return this._nemUtils.getTransactionsWithString(this._Wallet.currentAccount.address, "createdPollIndex:", options).then((creationTrans) => {
+            return creationTrans.map((trans) => {
                 return trans.transaction.message.replace('createdPollIndex:', '');
             });
         });
     }
 
     // Creates a new poll index (private can be true or false)
-    createNewIndex(){
+    createNewIndex() {
 
         // Decrypt/generate private key and check it. Returned private key is contained into this.common
         if (!CryptoHelpers.passwordToPrivatekeyClear(this.common, this._Wallet.currentAccount, this._Wallet.algo, false)) {
@@ -229,12 +226,12 @@ class pollsCtrl {
             return;
         }
 
-        this._nemUtils.createNewAccount().then((account)=>{
-            this._nemUtils.sendMessage(this._Wallet.currentAccount.address, 'createdPollIndex:'+account.address, this.common);
+        this._nemUtils.createNewAccount().then((account) => {
+            this._nemUtils.sendMessage(this._Wallet.currentAccount.address, 'createdPollIndex:' + account.address, this.common);
             let obj = {
                 private: this.createPrivateIndex
             };
-            if(this.createPrivateIndex){
+            if (this.createPrivateIndex) {
                 obj.creator = this._Wallet.currentAccount.address
             }
             let message = "pollIndex:" + JSON.stringify(obj);
@@ -248,21 +245,21 @@ class pollsCtrl {
     }
 
     // manages inputted Poll address on the options tab
-    pollAddressInput(){
+    pollAddressInput() {
         this.searching = true;
         this.inputAddressValid = true;
         this.loadingAddressError = false;
         //check if it is a valid address
         this.inputAccount = this.inputAccount.toUpperCase().replace(/-/g, '');
         this.inputAddressValid = this._nemUtils.isValidAddress(this.inputAccount);
-        if(!this.inputAddressValid){
+        if (!this.inputAddressValid) {
             this.inputAddressValid = false;
             this.searching = false;
             return;
         }
-        this.getPoll(this.inputAccount).then(()=>{
+        this.getPoll(this.inputAccount).then(() => {
             this.searching = false;
-        }).catch((e)=>{
+        }).catch((e) => {
             this.searching = false;
             this.loadingAddressError = true;
             this._scope.$digest();
@@ -270,28 +267,28 @@ class pollsCtrl {
     }
 
     // manages inputted Index address on the options tab
-    pollIndexInput(){
+    pollIndexInput() {
         this.searching = true;
         this.inputAddressValid = true;
         this.loadingAddressError = false;
         //check if it is a valid address
         this.inputAccount = this.inputAccount.toUpperCase().replace(/-/g, '');
         this.inputAddressValid = this._nemUtils.isValidAddress(this.inputAccount);
-        if(!this.inputAddressValid){
+        if (!this.inputAddressValid) {
             this.inputAddressValid = false;
             this.searching = false;
             return;
         }
-        this._nemUtils.getFirstMessageWithString(this.inputAccount, 'pollIndex:').then((message)=>{
+        this._nemUtils.getFirstMessageWithString(this.inputAccount, 'pollIndex:').then((message) => {
             this.pollIndexAccount = this.inputAccount;
             let indexInfo = JSON.parse(message.replace('pollIndex:', ''));
             this.pollIndexPrivate = indexInfo.private;
-            this.getPolls().then(()=>{
+            this.getPolls().then(() => {
                 this.searching = false;
-            }).catch((e)=>{
+            }).catch((e) => {
                 throw e;
             });
-        }).catch((e)=>{
+        }).catch((e) => {
             this.searching = false;
             this.loadingAddressError = true;
             this._scope.$digest();
@@ -338,7 +335,7 @@ class pollsCtrl {
     }
 
     // Gets the details and results of a poll by address
-    getPoll(address){
+    getPoll(address) {
         this.loadingPoll = true;
         this.loadingResults = true;
 
@@ -360,10 +357,9 @@ class pollsCtrl {
             this.loadingPoll = false;
             this.currentPollAddress = address;
             let resultsPromise;
-            if(now < this.selectedPoll.formData.doe){
+            if (now < this.selectedPoll.formData.doe) {
                 resultsPromise = this._Voting.getResults(address, this.selectedPoll.formData.type);
-            }
-            else{
+            } else {
                 resultsPromise = this._Voting.getResults(address, this.selectedPoll.formData.type, this.selectedPoll.formData.doe);
             }
             resultsPromise.then((data) => {
@@ -376,14 +372,14 @@ class pollsCtrl {
                     return (option.text + ': ' + option.percentage.toFixed(2) + '%');
                 });
                 this.loadingResults = false;
-            }).then(()=>{
+            }).then(() => {
                 this._scope.$digest();
-            }).catch(e=>{});
+            }).catch(e => {});
         }).then(() => {
             return this.checkHasVoted();
-        }).then(()=>{
+        }).then(() => {
             this._scope.$digest();
-        }).catch((e)=>{
+        }).catch((e) => {
             this.loadingPoll = false;
             throw e;
         });
@@ -391,9 +387,9 @@ class pollsCtrl {
 
     // selects a poll by the index on the polls list
     pollSelect(index) {
-        this.getPoll(this.pollsList[index].address).then(()=>{
+        this.getPoll(this.pollsList[index].address).then(() => {
             this.loadingAddressError = false;
-        }).catch((e)=>{
+        }).catch((e) => {
             console.log("pollselect");
             this.loadingAddressError = true;
         });
@@ -429,9 +425,8 @@ class pollsCtrl {
         this.createIndex = false;
         this.showDetails = false;
         this.tab = tab;
-        if(tab === 4){ //options tab
-        }
-        else{
+        if (tab === 4) { //options tab
+        } else {
             this.updateList();
         }
     }
@@ -492,9 +487,9 @@ class pollsCtrl {
 
     //returns wether current user can vote on the poll(by whitelist, not by doe)
     isVotable(header) {
-        var type = ("type" in header)
-            ? (header.type)
-            : (header.formData.type);
+        var type = ("type" in header) ?
+            (header.type) :
+            (header.formData.type);
         if (type === 0) {
             return true;
         }
@@ -538,7 +533,7 @@ class pollsCtrl {
             this.setTab(1);
             // apply filters
             this.updateList();
-        }).catch((e)=>{
+        }).catch((e) => {
             this.loadingPolls = false;
             throw e;
         });

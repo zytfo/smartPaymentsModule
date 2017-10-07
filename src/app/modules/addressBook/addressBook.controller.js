@@ -104,7 +104,7 @@ class AddressBookCtrl {
         }
 
         // Check address
-        if(!Address.isValid(this.formData.address) || !Address.isFromNetwork(this.formData.address, this._Wallet.network)) {
+        if (!Address.isValid(this.formData.address) || !Address.isFromNetwork(this.formData.address, this._Wallet.network)) {
             this._Alert.invalidAddress();
             this.okPressed = false;
             return;
@@ -161,7 +161,7 @@ class AddressBookCtrl {
         }
 
         // Check address
-        if(!Address.isValid(this.formData.address) || !Address.isFromNetwork(this.formData.address, this._Wallet.network)) {
+        if (!Address.isValid(this.formData.address) || !Address.isFromNetwork(this.formData.address, this._Wallet.network)) {
             this._Alert.invalidAddress();
             this.okPressed = false;
             return;
@@ -302,7 +302,7 @@ class AddressBookCtrl {
      * @param address - account address
      */
     transferTransaction(address) {
-        this._$state.go("app.transferTransaction", {address: address});
+        this._$state.go("app.transferTransaction", { address: address });
     }
 
 }

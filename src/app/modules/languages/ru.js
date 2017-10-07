@@ -132,7 +132,7 @@ function RussianProvider($translateProvider) {
         GENERAL_HISTORY: 'История',
         GENERAL_REVEAL: 'Раскрыть',
         GENERAL_QR: 'QR-код',
-        GENERAL_UPDATE:  'Обновить',
+        GENERAL_UPDATE: 'Обновить',
         GENERAL_UNKNOWN: 'Неизвестно',
         GENERAL_IMPORTANCE: 'Важность',
         GENERAL_TRANSACTIONS: 'Транзакции',
@@ -705,7 +705,11 @@ function RussianProvider($translateProvider) {
         FORM_TITLE_FIELD_PLACEHOLDER: 'Title',
         FORM_DESCRIPTION_FIELD_PLACEHOLDER: 'Write your description here',
         FORM_OPTION_FIELD_PLACEHOLDER: 'write option',
-        FORM_WHITELIST_FIELD_PLACEHOLDER: 'account address'
+        FORM_WHITELIST_FIELD_PLACEHOLDER: 'account address',
+
+        // SMART PAYMENTS MODULE
+        SMART_PAYMENTS_TITLE: 'Create scheduled payments',
+        SMART_PAYMENTS_TRANSACTION: 'New transaction'
     });
 
 }

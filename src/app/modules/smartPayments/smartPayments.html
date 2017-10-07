@@ -1,32 +1,111 @@
-<div class="col-md-6" style="margin-top:10px">
-    <div class="panel panel-default">
-        <div class="panel-heading" style="background-color: rgb(68, 68, 68); color: #000000;border-radius: 0px;">
-            <i class="fa fa-chevron-right"></i> Send a simple transfer
+<div class="voting-page">
+
+    <div class="container-fluid" style="padding-left: 20px; padding-right: 20px;">
+        <div class="row">
+            <div class="col-sm-11">
+                <h2>Manage Scheduled Payments</h2>
+            </div>
         </div>
-        <div class="panel-body">
-            <label>Password</label>
-            <br>
-            <input type="password" class="form-control" ng-model="$ctrl.common.password" />
-            <br>
-            <label>Recipient</label>
-            <br>
-            <input type="text" class="form-control" ng-model="$ctrl.formData.recipient" />
-            <br>
-            <label>Amount</label>
-            <br>
-            <input type="number" class="form-control" ng-model="$ctrl.formData.amount" min="0" ng-change="$ctrl.updateFee();" />
-            <br>
-            <label>Message</label>
-            <br>
-            <textarea class="form-control" ng-model="$ctrl.formData.message" rows="4" ng-change="$ctrl.updateFee();"></textarea>
-            <br>
-            <input type="date" class="form-control" ng-model="" />
-            <br>
-            <label>Fee</label>
-            <br>
-            <span>{{ $ctrl.formData.fee / 1000000 }}</span>
-            <br>
-            <button ng-click="$ctrl.send()" ng-disabled="$ctrl.okPressed">Send</button>
+
+        <div id="row1" class="row row1">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <!-- TABS -->
+                        <ul class="nav nav-tabs">
+                            <li ng-class="{ active: $ctrl.isTabSet(1) }">
+                                <a ng-click="$ctrl.setTab(1)">Create Scheduled Payment</a>
+                            </li>
+                            <li ng-class="{ active: $ctrl.isTabSet(2) }">
+                                <a ng-click="$ctrl.setTab(2)">See All Scheduled Payments</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-body">
+                        <!-- OPTIONS TAB -->
+                        <div ng-show="$ctrl.isTabSet(1)">
+                            <!-- Index / Poll Address Input -->
+                            <form>
+                                <!--<label>Password</label>
+                                <br>
+                                <input type="password" class="form-control" ng-model="$ctrl.common.password" />
+                                <br>
+                                <label>Recipient</label>
+                                <br>
+                                <input type="text" class="form-control" ng-model="$ctrl.formData.recipient" />
+                                <br>
+                                <label>Amount</label>
+                                <br>
+                                <input type="number" class="form-control" ng-model="$ctrl.formData.amount" min="0" ng-change="$ctrl.updateFee();" />
+                                <br>
+                                <label>Message</label>
+                                <br>
+                                <textarea class="form-control" ng-model="$ctrl.formData.message" rows="4" ng-change="$ctrl.updateFee();"></textarea>-->
+                                <br>
+                                <input type="datetime-local" class="form-control" ng-model="$ctrl.date" ng-change="$ctrl.saveDate();" />
+                                <br>
+                                <span>{{ $ctrl.date }}</span>
+                                <br>
+                                <button ng-click="$ctrl.saveTransaction();" ng-disabled="$ctrl.okPressed">Create Scheduled Payment</button>
+                                <br>
+                                <button ng-click="$ctrl.addTransaction();">Create Another Scheduled Payment</button>
+                                <!--<br>
+                                <label>Fee</label>
+                                <br>
+                                <span>{{ $ctrl.formData.fee / 1000000 }}</span>
+                                <br>
+                                <button ng-click="$ctrl.saveTrainsaction();" ng-disabled="$ctrl.okPressed">Create Scheduled Payment</button>-->
+                            </form>
+                            <br>
+                            <!-- only votable -->
+                            <!--<input id="box1" type="checkbox" ng-model="$ctrl.onlyVotable" ng-click="$ctrl.updateList()"><label for="box1">Show only polls you can vote on</label>-->
+                            <!-- INDEX CREATION -->
+                            <!--<br>
+                            <br>
+                            <button class="btn btn-success pull-xs-left" style="width:25%" ng-click="$ctrl.createIndex = true;">Create a poll Index</button>
+                            <br>
+                            <br>-->
+                            <!-- Created indexes -->
+                            <!--<div ng-hide="$ctrl.createdIndexes.length === 0">
+                                <label>created Indexes:</label>
+                                <div ng-repeat="indexAddress in $ctrl.createdIndexes track by $index">
+                                    <a ng-click="$ctrl.inputAccount = indexAddress; $ctrl.pollIndexInput()">{{indexAddress}}</a>
+                                </div>
+                            </div>-->
+                        </div>
+                        <div ng-show="$ctrl.isTabSet(2)">
+                            <!-- Index / Poll Address Input -->
+                            <form>
+                                <label>Your dates</label>
+                                <br>
+                                <li ng-repeat="date in $ctrl.dates">
+                                    {{date}}.
+                                    <br>
+                                </li>
+                                <br>
+                            </form>
+                            <br>
+                            <!-- only votable -->
+                            <!--<input id="box1" type="checkbox" ng-model="$ctrl.onlyVotable" ng-click="$ctrl.updateList()"><label for="box1">Show only polls you can vote on</label>-->
+                            <!-- INDEX CREATION -->
+                            <!--<br>
+                                <br>
+                                <button class="btn btn-success pull-xs-left" style="width:25%" ng-click="$ctrl.createIndex = true;">Create a poll Index</button>
+                                <br>
+                                <br>-->
+                            <!-- Created indexes -->
+                            <!--<div ng-hide="$ctrl.createdIndexes.length === 0">
+                                    <label>created Indexes:</label>
+                                    <div ng-repeat="indexAddress in $ctrl.createdIndexes track by $index">
+                                        <a ng-click="$ctrl.inputAccount = indexAddress; $ctrl.pollIndexInput()">{{indexAddress}}</a>
+                                    </div>
+                                </div>-->
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
