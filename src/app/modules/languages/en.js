@@ -707,8 +707,14 @@ function EnglishProvider($translateProvider) {
         FORM_WHITELIST_FIELD_PLACEHOLDER: 'account address',
 
         // SMART PAYMENTS MODULE
-        SMART_PAYMENTS_TITLE: 'Create scheduled payments',
-        SMART_PAYMENTS_TRANSACTION: 'New transaction'
+        SMART_PAYMENTS_TITLE: 'Create scheduled payment',
+        SMART_PAYMENTS_TRANSACTION: 'Create New Transaction',
+        SMART_PAYMENTS_ALL: 'Check All Scheduled Transactions',
+        SMART_PAYMENTS_DATE: 'Date',
+        SMART_PAYMENTS_CREATE: 'Create Payment',
+        SMART_PAYMENTS_YOUR_TRANS: 'Your Transactions',
+        SMART_PAYMENTS_TRANSACTION_DEFAULT: 'Transaction',
+        SMART_PAYMENTS_ANOTHER: 'Create Another Scheduled Payment'
     });
 
 }

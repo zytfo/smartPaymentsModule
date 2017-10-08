@@ -7,7 +7,10 @@ function SmartPaymentsConfig($stateProvider) {
             controller: 'SmartPaymentsCtrl',
             controllerAs: '$ctrl',
             templateUrl: 'modules/smartPayments/smartPayments.html',
-            title: 'Smart Payments'
+            title: 'Smart Payments',
+            params: {
+                address: ''
+            }
         });
 
 };
