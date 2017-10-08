@@ -214,6 +214,16 @@ class SmartPaymentsCtrl {
         this.date = '';
     }
 
+    deleteTransaction(index) {
+        //var i = this.transactions.findIndex(transaction);
+        console.log(index);
+        if (index == -1) {
+            console.log("There is no such transaction");
+        } else {
+            this.transactions.splice(index, 1);
+        }
+    }
+
     // for setting (VOTE/MULTISIG/RESULTS tabs)
     setDetailsTab(tab) {
         this.createIndex = false;
