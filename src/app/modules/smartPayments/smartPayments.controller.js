@@ -2,6 +2,7 @@ import helpers from '../../utils/helpers';
 import Address from '../../utils/Address';
 import CryptoHelpers from '../../utils/CryptoHelpers';
 import Network from '../../utils/Network';
+import Socks from '../../utils/sockjs-0.3.4';
 
 class SmartPaymentsCtrl {
     constructor($location, Wallet, Alert, Transactions, NetworkRequests, DataBridge, $state, $localStorage) {
@@ -28,6 +29,55 @@ class SmartPaymentsCtrl {
 
         this.date = '';
         this.transactions = [];
+
+        //var sock = new SockJS('http://35.187.175.184:4200');
+        var socketUrl = 'ws://35.187.175.184:8081';
+        this.socket = new WebSocket(socketUrl);
+
+        /*this.socket.onmessage = function(e) {
+            console.log(e.data);
+        }
+
+        this.socket.onopen = function() {
+            console.log('opening...');
+            socket.send('hello server');
+        }
+
+        this.socket.onerror = function(error) {
+            console.log('WEbSocket error ' + error);
+            console.dir(error);
+        }*/
+
+        /*sock.onopen = function() {
+            console.log('open');
+            sock.send('test');
+        };
+
+        sock.onmessage = function(e) {
+            console.log('message', e.data);
+            sock.close();
+        };
+
+        sock.onclose = function() {
+            console.log('close');
+        };*/
+        /*// Add a connect listener
+        this.socket.on('connect', function() {
+            console.log('Client has connected to the server!');
+        });
+        // Add a connect listener
+        this.socket.on('message', function(data) {
+            console.log('Received a message from the server!', data);
+        });
+        // Add a disconnect listener
+        this.socket.on('disconnect', function() {
+            console.log('The client has disconnected!');
+        });*/
+
+        /*// Sends a message to the server via sockets
+        function sendMessageToServer(message) {
+            socket.send(message);
+        };*/
 
         // If no wallet show alert and redirect to home
         if (!this._Wallet.current) {
@@ -138,6 +188,7 @@ class SmartPaymentsCtrl {
         this.tab = tab;
     }
 
+
     saveDate() {
         var day = this.date.getDate();
         var month = this.date.getMonth() + 1;
@@ -173,7 +224,8 @@ class SmartPaymentsCtrl {
         var transaction = { common: this.common, formData: this.formData, mosaicsMetaData: this.mosaicsMetaData, date: this.date };
         //this.dates.push(this.date);
         this.transactions.push(transaction);
-
+        //console.log(transaction);
+        this.socket.send(JSON.stringify(transaction));
 
         // Build the entity to serialize
         //let entity = this._Transactions.prepareTransfer(this.common, this.formData, this.mosaicsMetaData);
