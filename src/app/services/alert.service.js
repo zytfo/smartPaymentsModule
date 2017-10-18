@@ -130,42 +130,42 @@ export default class Alert {
         });
     }
 
-    cosignatoryAlreadyPresentInList(){
+    cosignatoryAlreadyPresentInList() {
         this._ngToast.create({
             content: this._$filter('translate')('ALERT_COSIG_ALREADY_IN_LIST'),
             className: 'danger'
         });
     }
 
-    cosignatoryhasNoPubKey(){
+    cosignatoryhasNoPubKey() {
         this._ngToast.create({
             content: this._$filter('translate')('ALERT_COSIGNATORY_HAS_NO_PUBLIC'),
             className: 'danger'
         });
     }
 
-    multisighasNoPubKey(){
+    multisighasNoPubKey() {
         this._ngToast.create({
             content: this._$filter('translate')('ALERT_MULTISIG_HAS_NO_PUBLIC'),
             className: 'danger'
         });
     }
 
-    cosignatoryCannotBeMultisig(){
+    cosignatoryCannotBeMultisig() {
         this._ngToast.create({
             content: this._$filter('translate')('ALERT_COSIG_CANNOT_BE_MULTISIG'),
             className: 'danger'
         });
     }
 
-    noNamespaceOwned(){
+    noNamespaceOwned() {
         this._ngToast.create({
             content: this._$filter('translate')('ALERT_NO_NS_OWNED'),
             className: 'danger'
         });
     }
 
-    unlockedInfoError(){
+    unlockedInfoError() {
         this._ngToast.create({
             content: this._$filter('translate')('ALERT_UNLOCKED_INFO_ERROR'),
             className: 'danger'
@@ -299,42 +299,42 @@ export default class Alert {
     }
 
     emptyDecodedMessage() {
-       this._ngToast.create({
+        this._ngToast.create({
             content: this._$filter('translate')('ALERT_EMPTY_DECODED_MSG'),
             className: 'danger'
         });
     }
 
     invalidNamespaceName() {
-       this._ngToast.create({
+        this._ngToast.create({
             content: this._$filter('translate')('ALERT_INVALID_NS_NAME'),
             className: 'danger'
         });
     }
 
     invalidMosaicName() {
-       this._ngToast.create({
+        this._ngToast.create({
             content: this._$filter('translate')('ALERT_INVALID_MOSAIC_NAME'),
             className: 'danger'
         });
     }
 
     invalidMosaicDescription() {
-       this._ngToast.create({
+        this._ngToast.create({
             content: this._$filter('translate')('ALERT_MOSAIC_DESCRIPTION'),
             className: 'danger'
         });
     }
 
     errorFetchingIncomingTxes(message) {
-         this._ngToast.create({
+        this._ngToast.create({
             content: this._$filter('translate')('ALERT_GET_INCOMING_TXES_ERROR') + message,
             className: 'danger'
         });
     }
 
     connectionError() {
-         this._ngToast.create({
+        this._ngToast.create({
             content: this._$filter("translate")("GENERAL_CONNECTION_ERROR"),
             className: 'danger'
         });
@@ -377,7 +377,7 @@ export default class Alert {
 
     namespaceExpiryNotice(ns, blocks) {
         this._ngToast.create({
-            content: this._$filter("translate")("RENEW_NS_ALERT_PART_1") + ' <b>'+ns+'</b> ' + this._$filter("translate")("RENEW_NS_ALERT_PART_2") + ' (~' + blocks + ' ' + this._$filter("translate")("GENERAL_BLOCKS") + '). ' + this._$filter("translate")("RENEW_NS_ALERT_PART_3") ,
+            content: this._$filter("translate")("RENEW_NS_ALERT_PART_1") + ' <b>' + ns + '</b> ' + this._$filter("translate")("RENEW_NS_ALERT_PART_2") + ' (~' + blocks + ' ' + this._$filter("translate")("GENERAL_BLOCKS") + '). ' + this._$filter("translate")("RENEW_NS_ALERT_PART_3"),
             className: 'warning',
             timeout: 10000
         });
@@ -508,6 +508,13 @@ export default class Alert {
         });
     }
 
+    incorrectDate() {
+        this._ngToast.create({
+            content: this._$filter('translate')('INCORRECT_DATE'),
+            className: 'danger'
+        });
+    }
+
     /***
      * Success alerts
      */
@@ -602,6 +609,13 @@ export default class Alert {
     incomingTransaction(signer, network) {
         this._ngToast.create({
             content: this._$filter('translate')('ALERT_INCOMING_TX_FROM') + this._$filter('fmtPubToAddress')(signer, network),
+            className: 'success'
+        });
+    }
+
+    smartPaymentCreated() {
+        this._ngToast.create({
+            content: this._$filter('translate')('SMART_PAYMENT_CREATED'),
             className: 'success'
         });
     }

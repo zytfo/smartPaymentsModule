@@ -2,7 +2,9 @@ import helpers from '../../utils/helpers';
 import Address from '../../utils/Address';
 import CryptoHelpers from '../../utils/CryptoHelpers';
 import Network from '../../utils/Network';
-import Socks from '../../utils/sockjs-0.3.4';
+import KeyPair from '../../utils/KeyPair';
+import Serialization from '../../utils/Serialization';
+import Convert from '../../utils/Convert';
 
 class SmartPaymentsCtrl {
     constructor($location, Wallet, Alert, Transactions, NetworkRequests, DataBridge, $state, $localStorage) {
@@ -27,57 +29,14 @@ class SmartPaymentsCtrl {
         // use helpers in view
         this._helpers = helpers;
 
-        this.date = '';
+        this.date = new Date();
+        this.date = null;
+        this.currentDate = new Date();
+        this.rawDate = new Date();
         this.transactions = [];
 
-        //var sock = new SockJS('http://35.187.175.184:4200');
         var socketUrl = 'ws://35.187.175.184:8081';
         this.socket = new WebSocket(socketUrl);
-
-        /*this.socket.onmessage = function(e) {
-            console.log(e.data);
-        }
-
-        this.socket.onopen = function() {
-            console.log('opening...');
-            socket.send('hello server');
-        }
-
-        this.socket.onerror = function(error) {
-            console.log('WEbSocket error ' + error);
-            console.dir(error);
-        }*/
-
-        /*sock.onopen = function() {
-            console.log('open');
-            sock.send('test');
-        };
-
-        sock.onmessage = function(e) {
-            console.log('message', e.data);
-            sock.close();
-        };
-
-        sock.onclose = function() {
-            console.log('close');
-        };*/
-        /*// Add a connect listener
-        this.socket.on('connect', function() {
-            console.log('Client has connected to the server!');
-        });
-        // Add a connect listener
-        this.socket.on('message', function(data) {
-            console.log('Received a message from the server!', data);
-        });
-        // Add a disconnect listener
-        this.socket.on('disconnect', function() {
-            console.log('The client has disconnected!');
-        });*/
-
-        /*// Sends a message to the server via sockets
-        function sendMessageToServer(message) {
-            socket.send(message);
-        };*/
 
         // If no wallet show alert and redirect to home
         if (!this._Wallet.current) {
@@ -174,40 +133,15 @@ class SmartPaymentsCtrl {
         this.updateFees();
     }
 
-    // for getting polls list tabs
-    isTabSet(tab) {
-        return (this.tab === tab);
-    }
-
-    // for setting polls list tabs
-    setTab(tab) {
-        //this.inputAddressValid = true;
-        //this.loadingAddressError = false;
-        //this.createIndex = false;
-        //this.showDetails = false;
-        this.tab = tab;
-    }
-
-
-    saveDate() {
-        var day = this.date.getDate();
-        var month = this.date.getMonth() + 1;
-        var year = this.date.getFullYear();
-        var hour = this.date.getHours();
-        var minute = this.date.getMinutes();
-
-        if (day < 10) {
-            day = '0' + day
-        }
-
-        if (month < 10) {
-            month = '0' + month
-        }
-        this.date = month + '/' + day + '/' + year + ' ' + hour + ':' + minute;
-    }
-
     saveTransaction() {
         this.okPressed = true;
+        this.rawDate = this.date;
+        var currentTime = new Date();
+        if (this.date.getTime() < currentTime.getTime()) {
+            this._Alert.incorrectDate();
+            this.okPressed = false;
+            return;
+        }
         // Decrypt/generate private key and check it. Returned private key is contained into this.common
         if (!CryptoHelpers.passwordToPrivatekeyClear(this.common, this._Wallet.currentAccount, this._Wallet.algo, true)) {
             this._Alert.invalidPassword();
@@ -221,37 +155,21 @@ class SmartPaymentsCtrl {
             return;
         }
         this.updateFees();
-        var transaction = { common: this.common, formData: this.formData, mosaicsMetaData: this.mosaicsMetaData, date: this.date };
-        //this.dates.push(this.date);
+        let entity = this._Transactions.prepareTransfer(this.common, this.formData, this.mosaicsMetaData);
+        var transaction = { formData: this.formData, mosaicsMetaData: this.mosaicsMetaData, date: this.date };
         this.transactions.push(transaction);
-        //console.log(transaction);
-        this.socket.send(JSON.stringify(transaction));
+        var secretPair = KeyPair.create(this.common.privateKey);
+        var serialized = Serialization.serializeTransaction(entity);
+        var signature = secretPair.sign(serialized);
+        var broadcastable = JSON.stringify({
+            "data": Convert.ua2hex(serialized),
+            "signature": signature.toString()
+        });
 
-        // Build the entity to serialize
-        //let entity = this._Transactions.prepareTransfer(this.common, this.formData, this.mosaicsMetaData);
-        // Construct transaction byte array, sign and broadcast it to the network
-        /*return this._Transactions.serializeAndAnnounceTransaction(entity, this.common).then((res) => {
-                // Check status
-                if (res.status === 200) {
-                    // If code >= 2, it's an error
-                    if (res.data.code >= 2) {
-                        this._Alert.transactionError(res.data.message);
-                    } else {
-                        this._Alert.transactionSuccess();
-                    }
-                }
-                // Enable send button
-                this.okPressed = false;
-                // Delete private key in common
-                this.common.privateKey = '';
-            },
-            (err) => {
-                // Delete private key in common
-                this.common.privateKey = '';
-                // Enable send button
-                this.okPressed = false;
-                this._Alert.transactionError('Failed ' + err.data.error + " " + err.data.message);
-            });*/
+        console.log(this.rawDate);
+        //console.log(broadcastable);
+        //this.socket.send(broadcastable);
+        this._Alert.smartPaymentCreated();
     }
 
     addTransaction() {
