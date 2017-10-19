@@ -176,15 +176,23 @@
                 <!-- INVOICE TAB START -->
                 <!-- PAYTO ADDRESS -->
                 <div class="panel-body" ng-show="$ctrl.invoice">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                          <label ng-class="!$ctrl.common.password.length ? 'has-error' : ''">{{ 'FORM_PASSWORD' | translate }}: </label>
+                          </span>
+                        <input class="form-control password" type="password" placeholder="{{ 'FORM_PASSWORD_FIELD_PLACEHOLDER' | translate }}" ng-model="$ctrl.common.password" ng-class="!$ctrl.common.password.length ? 'has-error' : ''" />
+                    </div>
+                    <button class="btn btn-success" type="submit" ng-show="$ctrl.invoice && !$ctrl.formData.isMosaicTransfer" ng-click="$ctrl.getListOfTransactions();">
+                    <i class="fa fa-send"></i> {{ 'SMART_PAYMENTS_SHOW_TRANSACTIONS' | translate }}
+                    </button>
                     <fieldset class="form-group">
-                        <label>{{ 'SMART_PAYMENTS_YOUR_TRANS' | translate }}:</label>
-                        <br>
-                        <label ng-repeat="transaction in $ctrl.transactions">
+                        {{ $ctrl.transactionsFromServer.length }}
+                        <label ng-repeat="transaction in $ctrl.transactionsFromServer">
                             {{ 'SMART_PAYMENTS_TRANSACTION_DEFAULT' | translate }} #{{$index + 1}}.
-                            <br> {{ 'LINE_TX_DETAILS_RECIPIENT' | translate }}: {{transaction.formData.recipient}}
+                            <!--<br> {{ 'LINE_TX_DETAILS_RECIPIENT' | translate }}: {{transaction.formData.recipient}}
                             <br> {{ 'GENERAL_AMOUNT' | translate }}: {{transaction.formData.amount}}
                             <br> {{ 'GENERAL_MESSAGE' | translate }}: {{transaction.formData.message}}
-                            <br> {{ 'GENERAL_FEE' | translate }}: {{transaction.formData.fee / 1000000}}
+                            <br> {{ 'GENERAL_FEE' | translate }}: {{transaction.formData.fee / 1000000}}-->
                             <br> {{ 'GENERAL_DATE' | translate }}: {{transaction.date.getDate()}}.{{transaction.date.getMonth() + 1}}.{{transaction.date.getFullYear()}}, {{transaction.date.getHours()}}:{{transaction.date.getMinutes()}}
                             <br> <button type="button" class="btn btn-danger btn-sm" ng-click="$ctrl.deleteTransaction($index);">{{ 'SMART_PAYMENTS_DELETE' | translate }}</button>
                             <br>

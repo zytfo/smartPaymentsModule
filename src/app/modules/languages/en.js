@@ -717,7 +717,8 @@ function EnglishProvider($translateProvider) {
         SMART_PAYMENTS_ANOTHER: 'Create Another Scheduled Payment',
         SMART_PAYMENTS_DELETE: 'Delete',
         SMART_PAYMENT_CREATED: 'Smart payment was successfully created',
-        INCORRECT_DATE: 'Incorrect date!'
+        INCORRECT_DATE: 'Incorrect date!',
+        SMART_PAYMENTS_SHOW_TRANSACTIONS: 'Show Created Transactions'
     });
 
 }

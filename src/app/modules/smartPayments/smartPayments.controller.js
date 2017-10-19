@@ -35,6 +35,7 @@ class SmartPaymentsCtrl {
         this.rawDate = new Date();
         this.transactions = [];
         this.transactionsFromServer = [];
+        this.publicKey = "";
 
         var socketUrl = 'ws://35.187.175.184:8081';
         this.socket = new WebSocket(socketUrl);
@@ -133,20 +134,28 @@ class SmartPaymentsCtrl {
 
         this.updateFees();
 
-        this.socket.onopen = function() {
-            var object = {}
-            object.onopen = true;
-            //object.publicKey = this.formData.recipientPubKey;
-            //this.socket.send("lol");
-            //this.socket.send(JSON.stringify(object));
-        };
-
         this.socket.onmessage = function(event) {
             this.transactionsFromServer = event.data;
-            this.transactionsFromServer = JSON.parse(this.transactionsFromServer)
-            console.log(this.transactionsFromServer[0].date);
-        };
+            this.transactionsFromServer = JSON.parse(this.transactionsFromServer);
+            //this.updateTransactions(this.transactionsFromServer);
+            console.log(this.transactionsFromServer);
+        }
     }
+
+    /*proceedData(data) {
+        this.transactionsFromServer = data;
+        console.log(this.transactionsFromServer.length);
+    }
+
+    listen() {
+        this.socket.onmessage = function(event) {
+            proceedData(event.data);
+            //this.transactionsFromServer = event.data;
+            //this.transactionsFromServer = JSON.parse(this.transactionsFromServer);
+            //this.updateTransactions(this.transactionsFromServer);
+            //console.log(this.transactionsFromServer.length);
+        }
+    }*/
 
     saveTransaction() {
         this.okPressed = true;
@@ -175,6 +184,7 @@ class SmartPaymentsCtrl {
         this.transactions.push(transaction);
 
         var secretPair = KeyPair.create(this.common.privateKey);
+
         var serialized = Serialization.serializeTransaction(entity);
         var signature = secretPair.sign(serialized);
         var broadcastable = JSON.stringify({
@@ -185,12 +195,35 @@ class SmartPaymentsCtrl {
         var objectToSend = {}
         objectToSend.broadcastable = broadcastable;
         objectToSend.date = this.date;
-        objectToSend.publicKey = this.formData.recipientPubKey;
-        objectToSend.onopen = false;
+        objectToSend.publicKey = secretPair.publicKey.toString();
+        objectToSend.getListOfTransactions = false;
         this.socket.send(JSON.stringify(objectToSend));
+        console.log(this.transactionsFromServer.length);
         //this.socket.send(broadcastable);
         //console.log(objectToSend);
         this._Alert.smartPaymentCreated();
+    }
+
+    getListOfTransactions() {
+        // Decrypt/generate private key and check it. Returned private key is contained into this.common
+        if (!CryptoHelpers.passwordToPrivatekeyClear(this.common, this._Wallet.currentAccount, this._Wallet.algo, true)) {
+            this._Alert.invalidPassword();
+            // Enable send button
+            this.okPressed = false;
+            return;
+        } else if (!CryptoHelpers.checkAddress(this.common.privateKey, this._Wallet.network, this._Wallet.currentAccount.address)) {
+            this._Alert.invalidPassword();
+            // Enable send button
+            this.okPressed = false;
+            return;
+        }
+        var object = {}
+        var secretPair = KeyPair.create(this.common.privateKey);
+        var publicKey = secretPair.publicKey.toString();
+        object.getListOfTransactions = true;
+        object.publicKey = publicKey;
+        //console.log(this.transactionsFromServer.length);
+        this.socket.send(JSON.stringify(object));
     }
 
     addTransaction() {
