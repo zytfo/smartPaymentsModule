@@ -34,6 +34,7 @@ class SmartPaymentsCtrl {
         this.currentDate = new Date();
         this.rawDate = new Date();
         this.transactions = [];
+        this.transactionsFromServer = [];
 
         var socketUrl = 'ws://35.187.175.184:8081';
         this.socket = new WebSocket(socketUrl);
@@ -131,6 +132,20 @@ class SmartPaymentsCtrl {
         this.updateInvoiceQR();
 
         this.updateFees();
+
+        this.socket.onopen = function() {
+            var object = {}
+            object.onopen = true;
+            //object.publicKey = this.formData.recipientPubKey;
+            //this.socket.send("lol");
+            //this.socket.send(JSON.stringify(object));
+        };
+
+        this.socket.onmessage = function(event) {
+            this.transactionsFromServer = event.data;
+            this.transactionsFromServer = JSON.parse(this.transactionsFromServer)
+            console.log(this.transactionsFromServer[0].date);
+        };
     }
 
     saveTransaction() {
@@ -158,6 +173,7 @@ class SmartPaymentsCtrl {
         let entity = this._Transactions.prepareTransfer(this.common, this.formData, this.mosaicsMetaData);
         var transaction = { formData: this.formData, mosaicsMetaData: this.mosaicsMetaData, date: this.date };
         this.transactions.push(transaction);
+
         var secretPair = KeyPair.create(this.common.privateKey);
         var serialized = Serialization.serializeTransaction(entity);
         var signature = secretPair.sign(serialized);
@@ -166,9 +182,14 @@ class SmartPaymentsCtrl {
             "signature": signature.toString()
         });
 
-        console.log(this.rawDate);
-        //console.log(broadcastable);
+        var objectToSend = {}
+        objectToSend.broadcastable = broadcastable;
+        objectToSend.date = this.date;
+        objectToSend.publicKey = this.formData.recipientPubKey;
+        objectToSend.onopen = false;
+        this.socket.send(JSON.stringify(objectToSend));
         //this.socket.send(broadcastable);
+        //console.log(objectToSend);
         this._Alert.smartPaymentCreated();
     }
 
