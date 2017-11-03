@@ -17,13 +17,13 @@
                     <ul class="nav nav-tabs">
                         <!-- Normal mode -->
                         <!-- On click it set multisig to false, invoice to false and update mosaics of account -->
-                        <li ng-class="$ctrl.formData.isMultisig || $ctrl.invoice ? '' : 'active'"><a ng-click="$ctrl.formData.isMultisig = false;$ctrl.invoice = false;$ctrl.updateCurrentAccountMosaics();$ctrl.setMosaicTransfer();">{{ 'SMART_PAYMENTS_TRANSACTION' | translate }}</a></li>
+                        <li ng-class="$ctrl.formData.isMultisig || $ctrl.invoice ? '' : 'active'"><a ng-click="$ctrl.formData.isMultisig = false;$ctrl.invoice = false;$ctrl.updateCurrentAccountMosaics();$ctrl.setMosaicTransfer();$ctrl.resetData()">{{ 'SMART_PAYMENTS_TRANSACTION' | translate }}</a></li>
                         <!-- Multisig mode -->
                         <!-- On click it set multisig to true, invoice to false update mosaics of account -->
                         <li ng-show="$ctrl._DataBridge.accountData.meta.cosignatoryOf.length" ng-class="$ctrl.formData.isMultisig ? 'active' : ''"><a ng-click="$ctrl.formData.isMultisig = true;$ctrl.invoice = false;$ctrl.formData.encryptMessage = false;$ctrl.updateCurrentAccountMosaics();$ctrl.setMosaicTransfer();">{{ 'GENERAL_TAB_MULTISIG' | translate }}</a></li>
                         <!-- Invoice mode -->
                         <!-- On click it set multisig to false, set invoice to true, isMosaicTransfer to false and reset form data -->
-                        <li ng-class="$ctrl.invoice ? 'active' : ''"><a ng-click="$ctrl.formData.isMultisig = false;$ctrl.invoice = true;$ctrl.formData.isMosaicTransfer = false;">{{ 'SMART_PAYMENTS_ALL' | translate }}</a></li>
+                        <li ng-class="$ctrl.invoice ? 'active' : ''"><a ng-click="$ctrl.formData.isMultisig = false;$ctrl.invoice = true;$ctrl.resetData();$ctrl.formData.isMosaicTransfer = false;">{{ 'SMART_PAYMENTS_ALL' | translate }}</a></li>
                     </ul>
                 </div>
                 <!-- Transaction form -->
@@ -118,7 +118,7 @@
                             <span class="input-group-btn message">
                                     <label>{{ 'SMART_PAYMENTS_DATE' | translate}}: </label>
                                 </span>
-                            <input type="datetime-local" ng-model="$ctrl.date" placeholder="yyyy-MM-ddTHH:mm" min="$ctrl.currentDate" required></textarea>
+                            <input type="datetime-local" ng-model="$ctrl.date" placeholder="yyyy-MM-ddTHH:mm" required></textarea>
                         </div>
                     </fieldset>
                     <!-- Checkbox Fields -->
@@ -170,11 +170,9 @@
                         <i class="fa fa-send"></i> {{ 'SMART_PAYMENTS_CREATE' | translate }}
                     </button>
                     <br>
-                    <button class="btn btn-success" ng-click="$ctrl.addTransaction();">{{ 'SMART_PAYMENTS_ANOTHER' | translate }}</button>
                     </fieldset>
                 </div>
-                <!-- INVOICE TAB START -->
-                <!-- PAYTO ADDRESS -->
+                <!-- CHECK ALL TRANSACTIONS TAB START -->
                 <div class="panel-body" ng-show="$ctrl.invoice">
                     <div class="input-group">
                         <span class="input-group-btn">
@@ -182,21 +180,19 @@
                           </span>
                         <input class="form-control password" type="password" placeholder="{{ 'FORM_PASSWORD_FIELD_PLACEHOLDER' | translate }}" ng-model="$ctrl.common.password" ng-class="!$ctrl.common.password.length ? 'has-error' : ''" />
                     </div>
-                    <button class="btn btn-success" type="submit" ng-show="$ctrl.invoice && !$ctrl.formData.isMosaicTransfer" ng-click="$ctrl.getListOfTransactions();">
+                    <button class="btn btn-success" type="submit" ng-show="$ctrl.invoice && !$ctrl.formData.isMosaicTransfer" ng-disabled="$ctrl.getListPressed" ng-click="$ctrl.getListOfTransactions();">
                     <i class="fa fa-send"></i> {{ 'SMART_PAYMENTS_SHOW_TRANSACTIONS' | translate }}
                     </button>
                     <fieldset class="form-group">
-                        {{ $ctrl.transactionsFromServer.length }}
-                        <label ng-repeat="transaction in $ctrl.transactionsFromServer">
+                        <div ng-repeat="transaction in $ctrl.transactionsFromServer track by $index">
                             {{ 'SMART_PAYMENTS_TRANSACTION_DEFAULT' | translate }} #{{$index + 1}}.
-                            <!--<br> {{ 'LINE_TX_DETAILS_RECIPIENT' | translate }}: {{transaction.formData.recipient}}
-                            <br> {{ 'GENERAL_AMOUNT' | translate }}: {{transaction.formData.amount}}
-                            <br> {{ 'GENERAL_MESSAGE' | translate }}: {{transaction.formData.message}}
-                            <br> {{ 'GENERAL_FEE' | translate }}: {{transaction.formData.fee / 1000000}}-->
+                            <br> {{ 'LINE_TX_DETAILS_RECIPIENT' | translate }}: {{transaction.recipient}}
+                            <br> {{ 'GENERAL_AMOUNT' | translate }}: {{transaction.amount}}
+                            <br> {{ 'GENERAL_MESSAGE' | translate }}: {{transaction.message}}
                             <br> {{ 'GENERAL_DATE' | translate }}: {{transaction.date.getDate()}}.{{transaction.date.getMonth() + 1}}.{{transaction.date.getFullYear()}}, {{transaction.date.getHours()}}:{{transaction.date.getMinutes()}}
-                            <br> <button type="button" class="btn btn-danger btn-sm" ng-click="$ctrl.deleteTransaction($index);">{{ 'SMART_PAYMENTS_DELETE' | translate }}</button>
+                            <br> <button type="button" class="btn btn-danger btn-sm" ng-click="$ctrl.deleteTransactionFromServer($index);">{{ 'SMART_PAYMENTS_DELETE' | translate }}</button>
                             <br>
-                        </label>
+                        </div>
                         <br>
                     </fieldset>
                 </div>

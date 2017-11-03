@@ -7,9 +7,10 @@ import Serialization from '../../utils/Serialization';
 import Convert from '../../utils/Convert';
 
 class SmartPaymentsCtrl {
-    constructor($location, Wallet, Alert, Transactions, NetworkRequests, DataBridge, $state, $localStorage) {
+    constructor($location, Wallet, Alert, Transactions, NetworkRequests, DataBridge, $state, $localStorage, $scope) {
         'ngInject';
 
+        var _self = this;
         // Alert service
         this._Alert = Alert;
         // $location to redirect
@@ -32,7 +33,7 @@ class SmartPaymentsCtrl {
         this.date = new Date();
         this.date = null;
         this.currentDate = new Date();
-        this.rawDate = new Date();
+        this.maxDate = new Date(new Date().setFullYear(new Date().getFullYear() + 5));
         this.transactions = [];
         this.transactionsFromServer = [];
         this.publicKey = "";
@@ -91,6 +92,7 @@ class SmartPaymentsCtrl {
         this.showAlias = false;
         // Needed to prevent user to click twice on send when already processing
         this.okPressed = false;
+        this.getListPressed = false;
 
         // Character counter
         this.charsLeft = 1024;
@@ -114,54 +116,28 @@ class SmartPaymentsCtrl {
             return Math.ceil(this.contacts.length / this.pageSizeAb);
         }
 
-        // Invoice model for QR
-        this.invoiceData = {
-            "v": this._Wallet.network === Network.data.Testnet.id ? 1 : 2,
-            "type": 2,
-            "data": {
-                "addr": this._Wallet.currentAccount.address,
-                "amount": 0,
-                "msg": "",
-                "name": "NanoWallet XEM invoice"
-            }
-        };
-
         // Init account mosaics
         this.updateCurrentAccountMosaics();
-
-        // Init invoice QR
-        this.updateInvoiceQR();
 
         this.updateFees();
 
         this.socket.onmessage = function(event) {
-            this.transactionsFromServer = event.data;
-            this.transactionsFromServer = JSON.parse(this.transactionsFromServer);
-            //this.updateTransactions(this.transactionsFromServer);
-            console.log(this.transactionsFromServer);
+            _self.transactionsFromServer = JSON.parse(event.data);
+            for (var i = 0; i < _self.transactionsFromServer.length; i++) {
+                _self.transactionsFromServer[i].date = new Date(_self.transactionsFromServer[i].date);
+            }
         }
     }
-
-    /*proceedData(data) {
-        this.transactionsFromServer = data;
-        console.log(this.transactionsFromServer.length);
-    }
-
-    listen() {
-        this.socket.onmessage = function(event) {
-            proceedData(event.data);
-            //this.transactionsFromServer = event.data;
-            //this.transactionsFromServer = JSON.parse(this.transactionsFromServer);
-            //this.updateTransactions(this.transactionsFromServer);
-            //console.log(this.transactionsFromServer.length);
-        }
-    }*/
 
     saveTransaction() {
         this.okPressed = true;
-        this.rawDate = this.date;
-        var currentTime = new Date();
-        if (this.date.getTime() < currentTime.getTime()) {
+        this.getListPressed = false;
+        if (this.date.getTime() < this.currentDate.getTime()) {
+            this._Alert.incorrectDate();
+            this.okPressed = false;
+            return;
+        }
+        if (this.date.getTime() > this.maxDate.getTime()) {
             this._Alert.incorrectDate();
             this.okPressed = false;
             return;
@@ -197,24 +173,27 @@ class SmartPaymentsCtrl {
         objectToSend.date = this.date;
         objectToSend.publicKey = secretPair.publicKey.toString();
         objectToSend.getListOfTransactions = false;
+        objectToSend.toDelete = false;
+        objectToSend.recipient = this.formData.recipient;
+        objectToSend.message = this.formData.message;
+        objectToSend.amount = this.formData.amount;
         this.socket.send(JSON.stringify(objectToSend));
-        console.log(this.transactionsFromServer.length);
-        //this.socket.send(broadcastable);
-        //console.log(objectToSend);
         this._Alert.smartPaymentCreated();
+        this.okPressed = false;
     }
 
     getListOfTransactions() {
+        this.getListPressed = true;
         // Decrypt/generate private key and check it. Returned private key is contained into this.common
         if (!CryptoHelpers.passwordToPrivatekeyClear(this.common, this._Wallet.currentAccount, this._Wallet.algo, true)) {
             this._Alert.invalidPassword();
             // Enable send button
-            this.okPressed = false;
+            this.getListPressed = false;
             return;
         } else if (!CryptoHelpers.checkAddress(this.common.privateKey, this._Wallet.network, this._Wallet.currentAccount.address)) {
             this._Alert.invalidPassword();
             // Enable send button
-            this.okPressed = false;
+            this.getListPressed = false;
             return;
         }
         var object = {}
@@ -222,87 +201,18 @@ class SmartPaymentsCtrl {
         var publicKey = secretPair.publicKey.toString();
         object.getListOfTransactions = true;
         object.publicKey = publicKey;
-        //console.log(this.transactionsFromServer.length);
+        object.toDelete = false;
         this.socket.send(JSON.stringify(object));
     }
 
-    addTransaction() {
-        this.okPressed = false;
-        this.formData = {}
-        this.formData.recipient = '';
-        //this.formData.amount = 0;
-        this.formData.message = '';
-        //this.formData.rawAmount = 0;
-        this.formData.encryptMessage = false;
-        this.formData.fee = 0;
-        this.date = '';
+    deleteTransactionFromServer(index) {
+        var objectToSend = {}
+        objectToSend.toDelete = true;
+        objectToSend.id = this.transactionsFromServer[index]._id;
+        this.socket.send(JSON.stringify(objectToSend));
+        this.transactionsFromServer.splice(index, 1);
     }
 
-    deleteTransaction(index) {
-        //var i = this.transactions.findIndex(transaction);
-        console.log(index);
-        if (index == -1) {
-            console.log("There is no such transaction");
-        } else {
-            this.transactions.splice(index, 1);
-        }
-    }
-
-    // for setting (VOTE/MULTISIG/RESULTS tabs)
-    setDetailsTab(tab) {
-        this.createIndex = false;
-        if (tab === 1) {
-            this.showVote = true;
-            this.multisigVote = false;
-        } else if (tab === 2) {
-            this.multisigAccount = this._DataBridge.accountData.meta.cosignatoryOf[0];
-            this.showVote = true;
-            this.multisigVote = true;
-        } else if (tab === 3) {
-            this.showVote = false;
-            this.multisigVote = false;
-        }
-        this.checkHasVoted();
-    }
-
-    // for getting (VOTE/MULTISIG/RESULTS tabs)
-    isDetailsTabSet(tab) {
-        if (tab === 1) {
-            return (this.showVote && !this.multisigVote);
-        } else if (tab === 2) {
-            return this.multisigVote;
-        } else if (tab === 3) {
-            return !this.showVote;
-        }
-    }
-
-
-    /**
-     * Generate QR using kjua lib
-     */
-    generateQRCode(text) {
-        let qrCode = kjua({
-            size: 256,
-            text: text,
-            fill: '#000',
-            quiet: 0,
-            ratio: 2,
-        });
-        $('#invoiceQR').html(qrCode);
-    }
-
-    /**
-     * Create the QR according to invoice data
-     */
-    updateInvoiceQR() {
-        // Clean input address
-        this.invoiceData.data.addr = this.invoiceData.data.addr.toUpperCase().replace(/-/g, '');
-        // Convert user input to micro XEM
-        this.invoiceData.data.amount = this.rawAmountInvoice * 1000000;
-        this.invoiceString = JSON.stringify(this.invoiceData);
-        // Generate the QR
-        this.generateQRCode(this.invoiceString);
-    }
 
     /**
      * Set or unset data for mosaic transfer
@@ -535,9 +445,11 @@ class SmartPaymentsCtrl {
     resetData() {
         this.formData.rawRecipient = '';
         this.formData.message = '';
+        this.date = '';
         this.rawAmount = 0;
         this.formData.amount = 0;
-        this.formData.invoiceRecipient = this._Wallet.currentAccount.address;
+        this.common.privateKey = '';
+        this.common.password = '';
     }
 
     /**
