@@ -709,7 +709,7 @@ function EnglishProvider($translateProvider) {
         // SMART PAYMENTS MODULE
         SMART_PAYMENTS_TITLE: 'Manage Scheduled Payments',
         SMART_PAYMENTS_TRANSACTION: 'Create New Transaction',
-        SMART_PAYMENTS_ALL: 'Check All Scheduled Transactions',
+        SMART_PAYMENTS_ALL: 'Check All Transactions',
         SMART_PAYMENTS_DATE: 'Date',
         SMART_PAYMENTS_CREATE: 'Create Payment',
         SMART_PAYMENTS_YOUR_TRANS: 'Your Transactions',

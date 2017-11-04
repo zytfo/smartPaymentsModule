@@ -8,11 +8,6 @@
         <div class="row">
             <div class="col-lg-6 col-md-12">
                 <div class="panel-heading">
-                    <div class="tabDescription">
-                        <!-- Title of panel -->
-                        <span ng-show="!$ctrl.formData.isMultisig && !$ctrl.invoice">{{ 'TRANSFER_TRANSACTION_NAME' | translate }}</span>
-                        <span ng-show="$ctrl.formData.isMultisig">{{ 'TRANSFER_TRANSACTION_MULTISIG_NAME' | translate }}</span>
-                    </div>
                     <!-- Tabbed modes -->
                     <ul class="nav nav-tabs">
                         <!-- Normal mode -->
@@ -291,6 +286,15 @@
                             </tag-levy>
                         </div>
                     </fieldset>
+                    <!-- Date Field -->
+                    <fieldset class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-btn message">
+                                    <label>{{ 'SMART_PAYMENTS_DATE' | translate}}: </label>
+                                </span>
+                            <input type="datetime-local" ng-model="$ctrl.date" placeholder="yyyy-MM-ddTHH:mm" required></textarea>
+                        </div>
+                    </fieldset>
                 </div>
                 <fieldset class="form-group" ng-show="!$ctrl.invoice && $ctrl.formData.isMosaicTransfer">
                     <div class="input-group">
@@ -301,7 +305,7 @@
                     </div>
                 </fieldset>
                 <button class="btn btn-success" type="submit" ng-show="!$ctrl.invoice && $ctrl.formData.isMosaicTransfer" ng-disabled="$ctrl.okPressed || !$ctrl.common.password.length || $ctrl.formData.recipient.length !== 40 || $ctrl.formData.encryptMessage && $ctrl.formData.recipientPubKey.length !== 64 || $ctrl.formData.isMosaicTransfer && !$ctrl.formData.mosaics.length || !$ctrl._helpers.isAmountValid($ctrl.rawAmount)"
-                    ng-click="$ctrl.send()">
+                    ng-click="$ctrl.saveTransaction()">
              <i class="fa fa-send"></i> {{ 'GENERAL_SEND' | translate }}
              </button>
             </div>

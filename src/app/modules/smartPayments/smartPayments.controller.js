@@ -452,53 +452,6 @@ class SmartPaymentsCtrl {
         this.common.password = '';
     }
 
-    /**
-     * Build and broadcast the transaction to the network
-     */
-    send() {
-        // Disable send button;
-        this.okPressed = true;
-
-        // Decrypt/generate private key and check it. Returned private key is contained into this.common
-        if (!CryptoHelpers.passwordToPrivatekeyClear(this.common, this._Wallet.currentAccount, this._Wallet.algo, true)) {
-            this._Alert.invalidPassword();
-            // Enable send button
-            this.okPressed = false;
-            return;
-        } else if (!CryptoHelpers.checkAddress(this.common.privateKey, this._Wallet.network, this._Wallet.currentAccount.address)) {
-            this._Alert.invalidPassword();
-            // Enable send button
-            this.okPressed = false;
-            return;
-        }
-
-        // Build the entity to serialize
-        let entity = this._Transactions.prepareTransfer(this.common, this.formData, this.mosaicsMetaData);
-        // Construct transaction byte array, sign and broadcast it to the network
-        return this._Transactions.serializeAndAnnounceTransaction(entity, this.common).then((res) => {
-                // Check status
-                if (res.status === 200) {
-                    // If code >= 2, it's an error
-                    if (res.data.code >= 2) {
-                        this._Alert.transactionError(res.data.message);
-                    } else {
-                        this._Alert.transactionSuccess();
-                    }
-                }
-                // Enable send button
-                this.okPressed = false;
-                // Delete private key in common
-                this.common.privateKey = '';
-            },
-            (err) => {
-                // Delete private key in common
-                this.common.privateKey = '';
-                // Enable send button
-                this.okPressed = false;
-                this._Alert.transactionError('Failed ' + err.data.error + " " + err.data.message);
-            });
-    }
-
 }
 
 export default SmartPaymentsCtrl;
