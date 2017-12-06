@@ -38,7 +38,7 @@ class SmartPaymentsCtrl {
         this.transactionsFromServer = [];
         this.publicKey = "";
 
-        var socketUrl = 'ws://35.187.175.184:8081';
+        var socketUrl = 'ws://35.205.87.230:8081';
         this.socket = new WebSocket(socketUrl);
 
         // If no wallet show alert and redirect to home
