@@ -1,8 +1,8 @@
 {
-  "name": "NanoWallet",
-  "version": "1.4.13",
-  "description": "Cross-platform lite wallet for NEM",
-  "author": "https://github.com/QuantumMechanics",
+  "name": "smart-payments-module",
+  "version": "1.0.0",
+  "description": "A smart payment module for NEM Wallet",
+  "author": "zytfo <khayalievartur@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "angular": "1.6.2",
