@@ -1,6 +1,6 @@
 {
   "name": "smart-payments-module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A smart payment module for NEM Wallet",
   "author": "zytfo <khayalievartur@gmail.com>",
   "license": "MIT",
@@ -48,13 +48,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/NemProject/NanoWallet.git"
+    "url": "https://github.com/zytfo/smartPaymentsModule"
   },
   "keywords": [
     "nem"
   ],
   "bugs": {
-    "url": "https://github.com/NemProject/NanoWallet/issues"
+    "url": "https://github.com/zytfo/smartPaymentsModule/issues"
   },
-  "homepage": "https://github.com/NemProject/NanoWallet#readme"
+  "homepage": "https://github.com/zytfo/smartPaymentsModule#readme"
 }
